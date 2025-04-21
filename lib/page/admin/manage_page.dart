@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:shoes_app/page/admin/category_page.dart';
+import 'package:shoes_app/page/admin/customer_page.dart';
+import 'package:shoes_app/page/admin/exchange_page.dart';
 import 'package:shoes_app/page/admin/products_page.dart';
+import 'package:shoes_app/page/admin/staff_page.dart';
+import 'package:shoes_app/page/admin/supplier_page.dart';
 import 'package:shoes_app/page/login_page.dart';
 
 List<String> items = [
-  "ຂໍ້ມູນຫົວໜ່ວຍ",
+  // "ຂໍ້ມູນຫົວໜ່ວຍ",
   "ຂໍ້ມູນປະເພດສີນຄ້າ",
   "ຂໍ້ມູນສີນຄ້າ",
   "ອັດຕາແລກປ່ຽນ",
@@ -13,7 +18,7 @@ List<String> items = [
 ];
 
 List<Icon> icons = [
-  Icon(Icons.ac_unit, size: 70, color: Colors.amber),
+  // Icon(Icons.ac_unit, size: 70, color: Colors.amber),
   Icon(Icons.category, size: 70, color: Colors.amber),
   Icon(Icons.folder_open, size: 70, color: Colors.amber),
   Icon(Icons.currency_exchange_sharp, size: 70, color: Colors.amber),
@@ -24,12 +29,12 @@ List<Icon> icons = [
 
 List<Widget> routePage = [
   // UnitPage(),
-  // CategoryPage(),
+  CategoryPage(),
   ProductsPage(),
-  // ExchangePage(),
-  // StaffPage(),
-  // SupplierPage(),
-  // CustomerPage(),
+  ExchangePage(),
+  StaffPage(),
+  SupplierPage(),
+  CustomerPage(),
 ];
 
 class ManagePage extends StatefulWidget {
@@ -56,7 +61,7 @@ class _ManagePageState extends State<ManagePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("ຈັດການຂໍ້ມູນພື້ນຖານ"),
-        backgroundColor: Colors.amber,
+        // backgroundColor: Colors.white,
         actions: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0),

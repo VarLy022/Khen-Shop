@@ -132,6 +132,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                     const SizedBox(height: 40),
                     TextFormField(
+                      style: TextStyle(color: Colors.white),
                       controller: nameController,
                       decoration: InputDecoration(
                         labelText: "ຊື່",
@@ -155,6 +156,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                     const SizedBox(height: 12),
                     TextFormField(
+                      style: TextStyle(color: Colors.white),
                       controller: emailController,
                       decoration: InputDecoration(
                         labelText: "ອີເມວ",
@@ -180,6 +182,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                     const SizedBox(height: 12),
                     TextFormField(
+                      style: TextStyle(color: Colors.white),
                       obscureText: _obscureText,
                       controller: passwordController,
                       decoration: InputDecoration(
@@ -213,6 +216,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                     const SizedBox(height: 12),
                     TextFormField(
+                      style: TextStyle(color: Colors.white),
                       controller: phoneController,
                       decoration: InputDecoration(
                         labelText: "ເບີໂທລະສັບ",
