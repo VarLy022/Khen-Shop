@@ -22,10 +22,10 @@ class _LoginPageState extends State<LoginPage> {
 
   // connect to server
   final String _baseApi = kIsWeb
-      ? 'http://localhost:3000' // สำหรับ Web
+      ? 'http://172.20.10.2:3000' // สำหรับ Web
       : Platform.isAndroid
           ? 'http://172.20.10.2:3000' // สำหรับ Android Emulator
-          : 'http://localhost:3000';
+          : 'http://172.20.10.2:3000';
 
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();

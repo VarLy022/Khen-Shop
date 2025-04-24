@@ -15,10 +15,10 @@ class _CustomerPageState extends State<CustomerPage> {
 
   // Base URL for your API
   final String _baseUrl = kIsWeb
-      ? 'http://localhost:3000/users' // สำหรับ Web
+      ? 'http://172.20.10.2:3000/shoes' // สำหรับ Web
       : Platform.isAndroid
-          ? 'http://172.20.10.2:3000/users' // สำหรับ Android Emulator
-          : 'http://localhost:3000/users'; // สำหรับ iOS หรือ desktop
+          ? 'http://172.20.10.2:3000/shoes' // สำหรับ Android Emulator
+          : 'http://172.20.10.2:3000/shoes'; // สำหรับ iOS หรือ desktop
 
   bool _isLoading = true;
   bool _isSearching = false;
@@ -31,7 +31,7 @@ class _CustomerPageState extends State<CustomerPage> {
     });
     try {
       final response=await http.get(Uri.parse(_baseUrl));
-
+      
     } catch (error) {
       
     }

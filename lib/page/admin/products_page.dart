@@ -69,10 +69,10 @@ class ProductsPage extends StatefulWidget {
 class _ProductsPageState extends State<ProductsPage> {
   // Base URL for your API
   final String _baseUrl = kIsWeb
-      ? 'http://localhost:3000/shoes' // สำหรับ Web
+      ? 'http://172.20.10.2:3000/shoes' // สำหรับ Web
       : Platform.isAndroid
           ? 'http://172.20.10.2:3000/shoes' // สำหรับ Android Emulator
-          : 'http://localhost:3000/shoes'; // สำหรับ iOS หรือ desktop
+          : 'http://172.20.10.2:3000/shoes'; // สำหรับ iOS หรือ desktop
 
   List<Shoe> _shoes = [];
   bool _isLoading = true;
