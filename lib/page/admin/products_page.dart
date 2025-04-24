@@ -71,7 +71,7 @@ class _ProductsPageState extends State<ProductsPage> {
   final String _baseUrl = kIsWeb
       ? 'http://localhost:3000/shoes' // สำหรับ Web
       : Platform.isAndroid
-          ? 'http://10.0.2.2:3000/shoes' // สำหรับ Android Emulator
+          ? 'http://172.20.10.2:3000/shoes' // สำหรับ Android Emulator
           : 'http://localhost:3000/shoes'; // สำหรับ iOS หรือ desktop
 
   List<Shoe> _shoes = [];
