@@ -12,15 +12,15 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Shoe Shop',
-      home: LoginPage(),
-      // initialRoute: '/login',
-      // routes: {
-      //   '/login': (context) => LoginPage(),
-      //   '/register': (context) => RegisterPage(),
-      //   // '/home': (context) => HomePage(),
-      //   // '/manage': (context) => ManagePage(),
-      //   // '/products': (context) => ProductsPage(),
-      // },
+      // home: LoginPage(),
+      initialRoute: '/login',
+      routes: {
+        '/login': (context) => LoginPage(),
+        '/register': (context) => RegisterPage(),
+        // '/home': (context) => HomePage(),
+        // '/manage': (context) => ManagePage(),
+        // '/products': (context) => ProductsPage(),
+      },
       theme: ThemeData(
         primarySwatch: Colors.amber,
         scaffoldBackgroundColor: const Color.fromARGB(241, 255, 250, 250),

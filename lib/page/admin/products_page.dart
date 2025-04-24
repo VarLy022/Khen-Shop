@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
+import 'dart:io' show Platform;
+import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 
 // Data model for a shoe
@@ -67,10 +68,42 @@ class ProductsPage extends StatefulWidget {
 
 class _ProductsPageState extends State<ProductsPage> {
   // Base URL for your API
-  final String _baseUrl = 'http://10.0.2.2:3000/shoes'; // Change as needed
+  final String _baseUrl = kIsWeb
+      ? 'http://localhost:3000/shoes' // สำหรับ Web
+      : Platform.isAndroid
+          ? 'http://10.0.2.2:3000/shoes' // สำหรับ Android Emulator
+          : 'http://localhost:3000/shoes'; // สำหรับ iOS หรือ desktop
+
   List<Shoe> _shoes = [];
   bool _isLoading = true;
   final ScrollController _scrollController = ScrollController();
+
+// search
+  bool isSearching = false;
+  TextEditingController searchController = TextEditingController();
+
+  Future<void> searchShoe(String keyword) async {
+    setState(() {
+      _isLoading = true;
+    });
+    try {
+      final response = await http.get(Uri.parse('$_baseUrl/$keyword'));
+      if (response.statusCode == 200) {
+        final List<dynamic> data = json.decode(response.body);
+        setState(() {
+          _shoes = data.map((json) => Shoe.fromJson(json)).toList();
+        });
+      } else {
+        _showErrorDialog('Search failed: ${response.statusCode}');
+      }
+    } catch (error) {
+      _showErrorDialog('Error: $error');
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
 
   // Form controllers for the Add/Edit Shoe dialog
   final TextEditingController _nameController = TextEditingController();
@@ -278,6 +311,7 @@ class _ProductsPageState extends State<ProductsPage> {
     }
 
     showModalBottomSheet(
+      backgroundColor: const Color.fromARGB(255, 168, 197, 194),
       context: context,
       isScrollControlled: true, // Make the bottom sheet full-screen if needed
       builder: (context) => Padding(
@@ -289,73 +323,91 @@ class _ProductsPageState extends State<ProductsPage> {
           right: 16,
         ),
         child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                shoe == null ? 'ເພີ່ມເກີບໃໝ່' : 'ແກ້ໄຂຂໍ້ມູນເກີບ',
-                style:
-                    const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              TextField(
-                controller: _nameController,
-                decoration: const InputDecoration(labelText: 'ຊື່ເກີບ'),
-              ),
-              TextField(
-                controller: _brandController,
-                decoration: const InputDecoration(labelText: 'ຍີ່ຫໍ້'),
-              ),
-              TextField(
-                controller: _priceController,
-                decoration: const InputDecoration(labelText: 'ລາຄາ'),
-                keyboardType: TextInputType.number,
-              ),
-              TextField(
-                controller: _stockController,
-                decoration: const InputDecoration(labelText: 'ຈຳນວນ'),
-                keyboardType: TextInputType.number,
-              ),
-              TextField(
-                controller: _sizeController,
-                decoration: const InputDecoration(labelText: 'ຂະໜາດ'),
-              ),
-              TextField(
-                controller: _colorController,
-                decoration: const InputDecoration(labelText: 'ສີ'),
-              ),
-              TextField(
-                controller: _descriptionController,
-                decoration: const InputDecoration(labelText: 'ລາຍລະອຽດ'),
-              ),
-              TextField(
-                controller: _imageUrlController,
-                decoration: const InputDecoration(labelText: 'URL ຮູບພາບ'),
-              ),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop(); // Close the dialog
-                      _clearInputFields();
-                    },
-                    child: const Text('ຍົກເລີກ'),
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Text(
+                    shoe == null ? 'ເພີ່ມເກີບໃໝ່' : 'ແກ້ໄຂຂໍ້ມູນເກີບ',
+                    style: const TextStyle(
+                        fontSize: 20, fontWeight: FontWeight.bold),
                   ),
-                  ElevatedButton(
-                    onPressed: () {
-                      if (shoe == null) {
-                        _addShoe();
-                      } else {
-                        _editShoe(shoe);
-                      }
-                    },
-                    child: Text(shoe == null ? 'ເພີ່ມ' : 'ບັນທຶກ'),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-            ],
+                ),
+                TextField(
+                  controller: _nameController,
+                  decoration: const InputDecoration(labelText: 'ຊື່ເກີບ'),
+                ),
+                TextField(
+                  controller: _brandController,
+                  decoration: const InputDecoration(labelText: 'ຍີ່ຫໍ້'),
+                ),
+                TextField(
+                  controller: _priceController,
+                  decoration: const InputDecoration(labelText: 'ລາຄາ'),
+                  keyboardType: TextInputType.number,
+                ),
+                TextField(
+                  controller: _stockController,
+                  decoration: const InputDecoration(labelText: 'ຈຳນວນ'),
+                  keyboardType: TextInputType.number,
+                ),
+                TextField(
+                  controller: _sizeController,
+                  decoration: const InputDecoration(labelText: 'ຂະໜາດ'),
+                ),
+                TextField(
+                  controller: _colorController,
+                  decoration: const InputDecoration(labelText: 'ສີ'),
+                ),
+                TextField(
+                  controller: _descriptionController,
+                  decoration: const InputDecoration(labelText: 'ລາຍລະອຽດ'),
+                ),
+                TextField(
+                  controller: _imageUrlController,
+                  decoration: const InputDecoration(labelText: 'URL ຮູບພາບ'),
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ElevatedButton(
+                      style:
+                          ElevatedButton.styleFrom(backgroundColor: Colors.red),
+                      onPressed: () {
+                        Navigator.of(context).pop(); // Close the dialog
+                        _clearInputFields();
+                      },
+                      child: const Text(
+                        'ຍົກເລີກ',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.black),
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green),
+                      onPressed: () {
+                        if (shoe == null) {
+                          _addShoe();
+                        } else {
+                          _editShoe(shoe);
+                        }
+                      },
+                      child: Text(
+                        shoe == null ? 'ເພີ່ມ' : 'ບັນທຶກ',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.black),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+              ],
+            ),
           ),
         ),
       ),
@@ -366,12 +418,45 @@ class _ProductsPageState extends State<ProductsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('ໜ້າສິນຄ້າ'),
+        title: isSearching
+            ? TextField(
+                controller: searchController,
+                decoration: InputDecoration(
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+                    hintText: 'ຄົ້ນຫາ...',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    hintStyle: TextStyle(color: Colors.black),
+                    filled: true,
+                    fillColor: Colors.white60),
+                style:
+                    TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                onChanged: (value) {
+                  // เรียกฟังก์ชันค้นหา
+                  if (searchController.text == "" ||
+                      searchController.text == null) {
+                    _fetchShoes();
+                  } else {
+                    searchShoe(searchController.text);
+                  }
+                },
+              )
+            : const Text('ຂໍ້ມູນສິນຄ້າ'),
         centerTitle: true,
         actions: [
           IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.search,size: 30,),
+            icon: Icon(isSearching ? Icons.close : Icons.search),
+            onPressed: () {
+              setState(() {
+                isSearching = !isSearching;
+                if (!isSearching) {
+                  searchController.clear();
+                  _fetchShoes();
+                }
+              });
+            },
           ),
         ],
       ),
@@ -391,9 +476,12 @@ class _ProductsPageState extends State<ProductsPage> {
               itemBuilder: (context, index) {
                 final shoe = _shoes[index];
                 return Card(
+                  shadowColor: Colors.green,
+                  color: const Color.fromARGB(255, 168, 197, 194),
                   elevation: 10,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
+                    
                   ),
                   child: InkWell(
                     onTap: () {
@@ -462,13 +550,21 @@ class _ProductsPageState extends State<ProductsPage> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             IconButton(
-                              icon: const Icon(Icons.edit, size: 20),
+                              icon: const Icon(
+                                Icons.edit,
+                                size: 25,
+                                color: Colors.blue,
+                              ),
                               onPressed: () {
                                 _showAddEditShoeDialog(shoe: shoe);
                               },
                             ),
                             IconButton(
-                              icon: const Icon(Icons.delete, size: 20),
+                              icon: const Icon(
+                                Icons.delete,
+                                size: 25,
+                                color: Colors.red,
+                              ),
                               onPressed: () {
                                 _showDeleteConfirmationDialog(shoe.shoeId!);
                               },

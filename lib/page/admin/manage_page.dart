@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shoes_app/page/admin/category_page.dart';
 import 'package:shoes_app/page/admin/customer_page.dart';
+import 'package:shoes_app/page/admin/drawerMenu.dart';
 import 'package:shoes_app/page/admin/exchange_page.dart';
 import 'package:shoes_app/page/admin/products_page.dart';
 import 'package:shoes_app/page/admin/staff_page.dart';
@@ -59,25 +60,11 @@ class _ManagePageState extends State<ManagePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: Drawermenu(),
       appBar: AppBar(
-        title: Text("ຈັດການຂໍ້ມູນພື້ນຖານ"),
+        title: Text("ຈັດການຂໍ້ມູນ"),
         // backgroundColor: Colors.white,
-        actions: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: IconButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                MaterialPageRoute route = MaterialPageRoute(builder: (_)=> LoginPage());
-                Navigator.push(context, route);
-              },
-              icon: Icon(
-                Icons.person,
-                size: 35,
-              ),
-            ),
-          ),
-        ],
+        
       ),
       body: Container(
         margin: EdgeInsets.all(12),

@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:email_validator/email_validator.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shoes_app/page/admin/manage_page.dart';
 import 'dart:convert';
-import 'costomer/home_page.dart';
+import 'customer/home_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -17,6 +20,13 @@ class _LoginPageState extends State<LoginPage> {
   bool _obscureText = true;
   String? _loginError; // To display login error messages
 
+  // connect to server
+  final String _baseApi = kIsWeb
+      ? 'http://localhost:3000' // สำหรับ Web
+      : Platform.isAndroid
+          ? 'http://10.0.2.2:3000' // สำหรับ Android Emulator
+          : 'http://localhost:3000';
+
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
@@ -26,14 +36,16 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
+  // login
   Future<void> loginUser() async {
     setState(() {
       _loginError = null; // Clear previous error message
     });
 
     if (_formkey.currentState!.validate()) {
-      final url = Uri.parse('http://10.0.2.2:3000/users/login');
+      // final url = Uri.parse('http://10.0.2.2:3000/users/login');
       try {
+        final Uri url = Uri.parse('$_baseApi/users/login');
         final response = await http.post(
           url,
           headers: {"Content-Type": "application/json"},
@@ -72,13 +84,13 @@ class _LoginPageState extends State<LoginPage> {
           setState(() {
             _loginError = 'ບໍ່ພົບບັນຊີໃນລະບົບ';
           });
-        }
-         else {
+        } else {
           // Other errors
           setState(() {
             _loginError = 'ເກີດຂໍ້ຜິດພາດໃນການເຂົ້າສູ່ລະບົບ';
           });
-          print('Login failed with status: ${response.statusCode}, body: ${response.body}');
+          print(
+              'Login failed with status: ${response.statusCode}, body: ${response.body}');
         }
       } catch (error) {
         setState(() {
@@ -204,11 +216,12 @@ class _LoginPageState extends State<LoginPage> {
                         padding: const EdgeInsets.symmetric(vertical: 8.0),
                         child: Text(
                           _loginError!,
-                          style: TextStyle(color: Colors.red,fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              color: Colors.red, fontWeight: FontWeight.bold),
                           textAlign: TextAlign.center,
                         ),
                       ),
-                      const SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     SizedBox(
                       width: MediaQuery.of(context).size.width * 0.72,
                       height: MediaQuery.of(context).size.width * 0.12,
@@ -232,7 +245,6 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                     const SizedBox(height: 12),
-                    
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 22.0),
                       child: Row(
