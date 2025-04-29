@@ -54,7 +54,7 @@ class _RegisterPageState extends State<RegisterPage> {
             context: context,
             dialogType: DialogType.success,
             animType: AnimType.leftSlide,
-            title: 'Success',
+            title: 'ສຳເລັດ',
             desc: 'ທ່ານໄດ້ລົງທະບຽນສຳເລັດແລ້ວ!',
             btnOkOnPress: () {
               Navigator.pushReplacement(
@@ -73,7 +73,7 @@ class _RegisterPageState extends State<RegisterPage> {
             context: context,
             dialogType: DialogType.error,
             animType: AnimType.leftSlide,
-            title: 'Error',
+            title: 'ຂໍ້ຜິດພາດ',
             desc: _errorMessage,
             btnOkOnPress: () {},
           ).show();
@@ -161,7 +161,6 @@ class _RegisterPageState extends State<RegisterPage> {
                       decoration: InputDecoration(
                         labelText: "ອີເມວ",
                         labelStyle: TextStyle(
-                            fontFamily: '',
                             fontWeight: FontWeight.bold,
                             color: Colors.amber,
                             fontSize: 18),

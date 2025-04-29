@@ -1,3 +1,4 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -76,6 +77,7 @@ class _ProductsPageState extends State<ProductsPage> {
 
   List<Shoe> _shoes = [];
   bool _isLoading = true;
+  String? errorMessage;
   final ScrollController _scrollController = ScrollController();
 
 // search
@@ -198,10 +200,10 @@ class _ProductsPageState extends State<ProductsPage> {
         _clearInputFields();
         Navigator.of(context).pop(); // Close the dialog
       } else {
-        _showErrorDialog('Failed to add shoe: ${response.statusCode}');
+        _showErrorDialog('ເກີດຂໍ້ຜິດພາດໃນການເພີ່ມເກີບ: ${response.statusCode}');
       }
     } catch (error) {
-      _showErrorDialog('Error: $error');
+      _showErrorDialog('ຂໍ້ຜິດພາດ: $error');
     }
   }
 
@@ -246,7 +248,7 @@ class _ProductsPageState extends State<ProductsPage> {
         _showErrorDialog('Failed to edit shoe: ${response.statusCode}');
       }
     } catch (error) {
-      _showErrorDialog('Error: $error');
+      _showErrorDialog('ຂໍ້ຜິດພາດ: $error');
     }
   }
 
@@ -267,19 +269,28 @@ class _ProductsPageState extends State<ProductsPage> {
 
   // Function to show an error dialog
   void _showErrorDialog(String message) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Error'),
-        content: Text(message),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('OK'),
-          ),
-        ],
-      ),
-    );
+    // showDialog(
+    //   context: context,
+    //   builder: (context) => AlertDialog(
+    //     title: const Text('ຂໍ້ຜິດພາດ'),
+    //     content: Text(message),
+    //     actions: [
+    //       TextButton(
+    //         onPressed: () => Navigator.of(context).pop(),
+    //         child: const Text('ຕົກລົງ'),
+    //       ),
+    //     ],
+    //   ),
+    // );
+
+    AwesomeDialog(
+    context: context,
+    dialogType: DialogType.error,
+    animType: AnimType.scale,
+    title: 'ຂໍ້ຜິດພາດ',
+    desc: message,
+    btnOkOnPress: () {},
+  ).show();
   }
 
   // Function to clear input fields in the Add/Edit Shoe dialog
@@ -386,7 +397,7 @@ class _ProductsPageState extends State<ProductsPage> {
                             fontWeight: FontWeight.bold, color: Colors.black),
                       ),
                     ),
-                    const SizedBox(width: 4),
+                    const SizedBox(width: 8),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.green),
@@ -400,7 +411,7 @@ class _ProductsPageState extends State<ProductsPage> {
                       child: Text(
                         shoe == null ? 'ເພີ່ມ' : 'ບັນທຶກ',
                         style: TextStyle(
-                            fontWeight: FontWeight.bold, color: Colors.black),
+                            fontWeight: FontWeight.bold, color: Colors.black,fontSize: 16),
                       ),
                     ),
                   ],
@@ -417,6 +428,7 @@ class _ProductsPageState extends State<ProductsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.blue.shade800,
       appBar: AppBar(
         title: isSearching
             ? TextField(
@@ -463,126 +475,135 @@ class _ProductsPageState extends State<ProductsPage> {
       body: _isLoading
           ? const Center(
               child: CircularProgressIndicator()) // Show loading indicator
-          : GridView.builder(
-              controller: _scrollController,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2, // 2 columns
-                crossAxisSpacing: 8,
-                mainAxisSpacing: 8,
-                childAspectRatio: 0.7, // Adjust as needed
+          : Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Colors.blue, Colors.teal],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
               ),
-              padding: const EdgeInsets.all(8),
-              itemCount: _shoes.length,
-              itemBuilder: (context, index) {
-                final shoe = _shoes[index];
-                return Card(
-                  shadowColor: Colors.green,
-                  color: const Color.fromARGB(255, 168, 197, 194),
-                  elevation: 10,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    
-                  ),
-                  child: InkWell(
-                    onTap: () {
-                      // Show shoe details or navigate to a detail page
-                      _showShoeDetails(shoe);
-                    },
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          child: ClipRRect(
-                            borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(12),
-                              topRight: Radius.circular(12),
-                            ),
-                            child: Image.network(
-                              shoe.imageUrl,
-                              fit: BoxFit.cover,
-                              width: double.infinity,
-                              errorBuilder: (context, error, stackTrace) {
-                                return const Center(
-                                    child: Text('Failed to load image'));
-                              },
+              child: GridView.builder(
+                controller: _scrollController,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2, // 2 columns
+                  crossAxisSpacing: 8,
+                  mainAxisSpacing: 8,
+                  childAspectRatio: 0.7, // Adjust as needed
+                ),
+                padding: const EdgeInsets.all(8),
+                itemCount: _shoes.length,
+                itemBuilder: (context, index) {
+                  final shoe = _shoes[index];
+                  return Card(
+                    shadowColor: Colors.green,
+                    color: const Color.fromARGB(255, 168, 197, 194),
+                    elevation: 10,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: InkWell(
+                      onTap: () {
+                        // Show shoe details or navigate to a detail page
+                        _showShoeDetails(shoe);
+                      },
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: ClipRRect(
+                              borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(12),
+                                topRight: Radius.circular(12),
+                              ),
+                              child: Image.network(
+                                shoe.imageUrl,
+                                fit: BoxFit.cover,
+                                width: double.infinity,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return const Center(
+                                      child:
+                                          Text('ເກີດຂໍ້ຜິດພາດໃນການໂລດຮູບພາບ'));
+                                },
+                              ),
                             ),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          Padding(
+                            padding: const EdgeInsets.all(8),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  shoe.name,
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                Text(
+                                  shoe.brand,
+                                  style: const TextStyle(fontSize: 14),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                Text(
+                                  'ຂະໜາດ: ${shoe.size}', // Format price
+                                  style: const TextStyle(fontSize: 14),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                // SizedBox(height: 8),
+                                Text(
+                                  'ລາຄາ: ${NumberFormat("#,##0.00", "en_US").format(shoe.price)} LAK',
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.green,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              Text(
-                                shoe.name,
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
+                              IconButton(
+                                icon: const Icon(
+                                  Icons.edit,
+                                  size: 25,
+                                  color: Colors.blue,
                                 ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
+                                onPressed: () {
+                                  _showAddEditShoeDialog(shoe: shoe);
+                                },
                               ),
-                              Text(
-                                shoe.brand,
-                                style: const TextStyle(fontSize: 14),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              Text(
-                                'ຂະໜາດ: ${shoe.size}', // Format price
-                                style: const TextStyle(fontSize: 14),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              // SizedBox(height: 8),
-                              Text(
-                                'ລາຄາ: ${NumberFormat("#,##0.00", "en_US").format(shoe.price)} LAK',
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.green,
+                              IconButton(
+                                icon: const Icon(
+                                  Icons.delete,
+                                  size: 25,
+                                  color: Colors.red,
                                 ),
+                                onPressed: () {
+                                  _showDeleteConfirmationDialog(shoe.shoeId!);
+                                },
                               ),
                             ],
-                          ),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            IconButton(
-                              icon: const Icon(
-                                Icons.edit,
-                                size: 25,
-                                color: Colors.blue,
-                              ),
-                              onPressed: () {
-                                _showAddEditShoeDialog(shoe: shoe);
-                              },
-                            ),
-                            IconButton(
-                              icon: const Icon(
-                                Icons.delete,
-                                size: 25,
-                                color: Colors.red,
-                              ),
-                              onPressed: () {
-                                _showDeleteConfirmationDialog(shoe.shoeId!);
-                              },
-                            ),
-                          ],
-                        )
-                      ],
+                          )
+                        ],
+                      ),
                     ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           _showAddEditShoeDialog();
         },
         tooltip: 'ເພີ່ມເກີບໃໝ່',
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.add,size: 30,),
         backgroundColor: Colors.green,
       ),
     );
