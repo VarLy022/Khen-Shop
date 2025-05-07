@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:shoes_app/page/login_page.dart';
-import 'package:shoes_app/page/register_page.dart';
+import 'package:shoes_app/auth/login_page.dart';
+import 'package:shoes_app/auth/register_page.dart';
 
 void main() => runApp(MyApp());
 

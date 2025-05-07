@@ -203,7 +203,7 @@ class _ProductsPageState extends State<ProductsPage> {
         _showErrorDialog('ເກີດຂໍ້ຜິດພາດໃນການເພີ່ມເກີບ: ${response.statusCode}');
       }
     } catch (error) {
-      _showErrorDialog('ຂໍ້ຜິດພາດ: $error');
+      _showErrorDialog('ກາລຸນາເຊື່ອມຕໍ່ກັບອິນເຕີເນັດ');
     }
   }
 
@@ -248,7 +248,8 @@ class _ProductsPageState extends State<ProductsPage> {
         _showErrorDialog('Failed to edit shoe: ${response.statusCode}');
       }
     } catch (error) {
-      _showErrorDialog('ຂໍ້ຜິດພາດ: $error');
+      // _showErrorDialog('ຂໍ້ຜິດພາດ: $error');
+      _showErrorDialog('ກາລຸນາເຊື່ອມຕໍ່ກັບອິນເຕີເນັດ');
     }
   }
 
@@ -263,7 +264,7 @@ class _ProductsPageState extends State<ProductsPage> {
         _showErrorDialog('Failed to delete shoe: ${response.statusCode}');
       }
     } catch (error) {
-      _showErrorDialog('Error: $error');
+      _showErrorDialog('ກາລຸນາເຊື່ອມຕໍ່ກັບອິນເຕີເນັດ');
     }
   }
 
@@ -284,13 +285,13 @@ class _ProductsPageState extends State<ProductsPage> {
     // );
 
     AwesomeDialog(
-    context: context,
-    dialogType: DialogType.error,
-    animType: AnimType.scale,
-    title: 'ຂໍ້ຜິດພາດ',
-    desc: message,
-    btnOkOnPress: () {},
-  ).show();
+      context: context,
+      dialogType: DialogType.error,
+      animType: AnimType.scale,
+      title: 'ຂໍ້ຜິດພາດ',
+      desc: message,
+      btnOkOnPress: () {},
+    ).show();
   }
 
   // Function to clear input fields in the Add/Edit Shoe dialog
@@ -411,7 +412,9 @@ class _ProductsPageState extends State<ProductsPage> {
                       child: Text(
                         shoe == null ? 'ເພີ່ມ' : 'ບັນທຶກ',
                         style: TextStyle(
-                            fontWeight: FontWeight.bold, color: Colors.black,fontSize: 16),
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                            fontSize: 16),
                       ),
                     ),
                   ],
@@ -603,7 +606,10 @@ class _ProductsPageState extends State<ProductsPage> {
           _showAddEditShoeDialog();
         },
         tooltip: 'ເພີ່ມເກີບໃໝ່',
-        child: const Icon(Icons.add,size: 30,),
+        child: const Icon(
+          Icons.add,
+          size: 30,
+        ),
         backgroundColor: Colors.green,
       ),
     );
@@ -698,20 +704,36 @@ class _ProductsPageState extends State<ProductsPage> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('ຢືນຢັນການລຶບ'),
-        content: const Text('ທ່ານແນ່ໃຈວ່າຕ້ອງການລຶບເກີບນີ້?'),
+        title: const Center(child: Text('ຢືນຢັນການລຶບ')),
+        content: Column(
+          mainAxisSize: MainAxisSize.min, // ❗ ทำให้ content ไม่สูงเกินไป
+          children: const [
+            Text(
+              'ທ່ານແນ່ໃຈວ່າຕ້ອງການລຶບເກີບນີ້?',
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
         actions: [
-          TextButton(
+          ElevatedButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('ຍົກເລີກ'),
+            child: const Text(
+              'ຍົກເລີກ',
+              style:
+                  TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+            ),
           ),
           ElevatedButton(
             onPressed: () {
               _deleteShoe(shoeId);
-              Navigator.of(context).pop(); // Close the dialog
+              Navigator.of(context).pop();
             },
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-            child: const Text('ລຶບ'),
+            child: const Text(
+              'ລຶບ',
+              style:
+                  TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+            ),
           ),
         ],
       ),

@@ -453,7 +453,7 @@ class _CustomerPageState extends State<CustomerPage> {
                                           user.user_image!.isEmpty)
                                       ? Icon(
                                           Icons.person,
-                                          size: 100,
+                                          size: 70,
                                         ) // ถ้า user.user_image เป็น null หรือว่าง ให้แสดงไอคอนแทน
                                       : null,
                                 ),

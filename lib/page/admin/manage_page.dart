@@ -6,7 +6,7 @@ import 'package:shoes_app/page/admin/exchange_page.dart';
 import 'package:shoes_app/page/admin/products_page.dart';
 import 'package:shoes_app/page/admin/staff_page.dart';
 import 'package:shoes_app/page/admin/supplier_page.dart';
-import 'package:shoes_app/page/login_page.dart';
+import 'package:shoes_app/auth/login_page.dart';
 
 List<String> items = [
   // "ຂໍ້ມູນຫົວໜ່ວຍ",
@@ -63,49 +63,58 @@ class _ManagePageState extends State<ManagePage> {
       drawer: Drawermenu(),
       appBar: AppBar(
         title: Text("ຈັດການຂໍ້ມູນ"),
-        // backgroundColor: Colors.white,
-        
       ),
       body: Container(
-        margin: EdgeInsets.all(12),
-        child: GridView.builder(
-          itemCount: items.length,
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,
-            mainAxisSpacing: 5,
-            crossAxisSpacing: 5,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.blue, Colors.teal],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
           ),
-          itemBuilder: (c, indx) {
-            return InkWell(
-              onTap: () {
-                selectPage(indx);
-              },
-              child: Container(
-                padding: EdgeInsets.symmetric(vertical: 15),
-                width: 180,
-                height: 200,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(25),
-                  color: Colors.blueGrey,
-                  border: Border.all(color: Colors.green, width: 2),
-                ),
-                child: Column(
-                  children: [
-                    icons[indx], // Dynamic icon assignment
-                    Spacer(),
-                    Text(
-                      items[indx], // Dynamic text from items
-                      style: TextStyle(
+        ),
+        // margin: EdgeInsets.all(12),
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: GridView.builder(
+            itemCount: items.length,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 3,
+              mainAxisSpacing: 5,
+              crossAxisSpacing: 5,
+            ),
+            itemBuilder: (c, indx) {
+              return InkWell(
+                onTap: () {
+                  selectPage(indx);
+                },
+                child: Container(
+                  padding: EdgeInsets.symmetric(vertical: 15),
+                  width: 180,
+                  height: 200,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(25),
+                    color: Colors.blueGrey,
+                    border: Border.all(color: Colors.green, width: 2),
+                  ),
+                  child: Column(
+                    children: [
+                      icons[indx], // Dynamic icon assignment
+                      Spacer(),
+                      Text(
+                        items[indx], // Dynamic text from items
+                        style: TextStyle(
                           color: Colors.white,
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          fontFamily: 'NotosansLao'),
-                    ),
-                  ],
+                          // fontFamily: 'NotosansLao',
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         ),
       ),
     );
