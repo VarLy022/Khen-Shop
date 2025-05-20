@@ -8,62 +8,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-// data model for a user
-class User {
-  final int? userId;
-  final String name;
-  final String email;
-  final String password;
-  final String phone;
-  final String? role;
-  final String? user_image;
-  // final String createdAt;
-
-  User({
-    this.userId,
-    required this.name,
-    required this.email,
-    required this.password,
-    required this.phone,
-    this.role,
-    this.user_image,
-    // required this.createdAt,
-  });
-
-  // create user object from json data
-  factory User.fromJson(Map<String, dynamic> json) {
-    return User(
-      // ถ้า name == null ก็ตั้งเป็น '' (ว่าง ๆ) แทน
-      // userId: json['user_id'] ?? '',
-      // name: json['name'] ?? '',
-      // email: json['email'] ?? '',
-      // password: json['password'] ?? '',
-      // phone: json['phone'] ?? '',
-      // role: json['role'] ?? '',
-      // user_image: json['user_image'] ?? '',
-      // createdAt: json['created_at'],
-
-      name: json['name'],
-      email: json['email'],
-      password: json['password'],
-      phone: json['phone'],
-      role: json['role'],
-      user_image: json['user_image'],
-    );
-  }
-
-  // method the convert user to object json for send to server
-  Map<String, dynamic> toJson() {
-    return {
-      'name': name,
-      'email': email,
-      'password': password,
-      'phone': phone,
-      'role': role,
-      'user_image': user_image,
-    };
-  }
-}
+import 'user_data_model.dart';
 
 class CustomerPage extends StatefulWidget {
   const CustomerPage({super.key});
@@ -128,7 +73,7 @@ class _CustomerPageState extends State<CustomerPage> {
   final TextEditingController pwdController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController roleController = TextEditingController();
-  final TextEditingController user_imageController = TextEditingController();
+  final TextEditingController userImageController = TextEditingController();
 
   // function to add and edit user
   void _showAddEditUserDialog({User? user}) {
@@ -143,7 +88,7 @@ class _CustomerPageState extends State<CustomerPage> {
       roleController.text = user.role ?? ''; // ใช้ '' หาก null
 
       // ถ้า user.user_image เป็น null ให้ใช้ค่าว่าง
-      user_imageController.text = user.user_image ?? ''; // ใช้ '' หาก null
+      userImageController.text = user.user_image ?? ''; // ใช้ '' หาก null
     } else {
       clearInputField();
     }
@@ -225,9 +170,15 @@ class _CustomerPageState extends State<CustomerPage> {
                   decoration: const InputDecoration(
                       labelText: 'ບົດບາດ', hintText: 'admin or customer'),
                 ),
-                TextField(
-                  controller: user_imageController,
-                  decoration: const InputDecoration(labelText: 'ຮູບພາບຜູ້ໃຊ້'),
+                Row(
+                  children: [
+                    TextField(
+                      controller: userImageController,
+                      decoration:
+                          const InputDecoration(labelText: 'ຮູບພາບຜູ້ໃຊ້'),
+                    ),
+                    IconButton(onPressed: (){}, icon: Icon(Icons.camera))
+                  ],
                 ),
                 const SizedBox(height: 20),
                 Row(
@@ -287,7 +238,7 @@ class _CustomerPageState extends State<CustomerPage> {
     pwdController.clear();
     phoneController.clear();
     roleController.clear();
-    user_imageController.clear();
+    userImageController.clear();
   }
 
   // show success diaglog
@@ -311,6 +262,7 @@ class _CustomerPageState extends State<CustomerPage> {
   //show error dialog
   void showErrorDialog(String message) {
     AwesomeDialog(
+      dialogBackgroundColor: Colors.red,
             context: context,
             dialogType: DialogType.error,
             animType: AnimType.scale,
@@ -340,16 +292,18 @@ class _CustomerPageState extends State<CustomerPage> {
         password: pwdController.text,
         phone: phoneController.text,
         role: roleController.text.isEmpty ? null : roleController.text,
-        user_image: user_imageController.text.isEmpty
-            ? null
-            : user_imageController.text,
+        user_image:
+            userImageController.text.isEmpty ? null : userImageController.text,
       );
 
       final response = await http.post(
-        Uri.parse('$_baseUrl/register'),
+        Uri.parse('$_baseUrl/users/register'),
         headers: {"Content-Type": "application/json"},
         body: json.encode(user.toJson()),
       );
+      // พิมพ์สถานะและเนื้อหาตอบกลับ เพื่อดูว่า server ตอบอะไร
+      print('RESPONSE STATUS: ${response.statusCode}');
+      print('RESPONSE BODY: ${response.body}');
 
       if (response.statusCode == 200) {
         await fetchUsers(); // รอโหลดข้อมูลใหม่
@@ -359,43 +313,70 @@ class _CustomerPageState extends State<CustomerPage> {
         Navigator.of(context).pop(); // ค่อย pop ออก
       } else {
         showErrorDialog(
-            'ເກີດຂໍ້ຜິດພາດໃນການເພີ່ມຜູ້ໃຊ້: ${response.statusCode}');
+          // 'ເກີດຂໍ້ຜິດພາດໃນການເພີ່ມຜູ້ໃຊ້: ${response.statusCode}',
+          'ເກີດຂໍ້ຜິດພາດໃນການເພີ່ມຜູ້ໃຊ້: ${response.statusCode}\n${response.body}',
+        );
       }
     } catch (error) {
       showErrorDialog('ຂໍ້ຜິດພາດ: $error');
     }
   }
 
-  // edite user
+  // edit
   Future<void> editUser(User user) async {
-  try {
-    // เช็คถ้า user_image เป็น null ให้ใช้ค่า default
-    final updatedUser = User(
-      userId: user.userId,
-      name: user.name,
-      email: user.email,
-      password: user.password,
-      phone: user.phone,
-      role: user.role ?? '',
-      user_image: user.user_image ?? '',  // ถ้า user_image เป็น null ใช้ค่าว่าง
-    );
-    
-    final response = await http.put(
-      Uri.parse('$_baseUrl/${user.userId}'),
-      headers: {"Content-Type": "application/json"},
-      body: json.encode(updatedUser.toJson()),
-    );
+    try {
+      final updatedUser = User(
+        userId: user.userId,
+        name: nameController.text,
+        email: emailController.text,
+        password: pwdController.text,
+        phone: phoneController.text,
+        role: roleController.text,
+        user_image:
+            userImageController.text.isEmpty ? null : userImageController.text,
+      );
 
-    if (response.statusCode == 200) {
-      fetchUsers();
-      clearInputField();
-      Navigator.of(context).pop();
+      final response = await http.put(
+        Uri.parse('$_baseUrl/users/${user.userId}'), // เพิ่ม /users/ ด้วย
+        headers: {"Content-Type": "application/json"},
+        body: json.encode(updatedUser.toJson()),
+      );
+
+      // print('RESPONSE STATUS: ${response.statusCode}');
+      // print('RESPONSE BODY: ${response.body}');
+      // print('UPDATE ID: ${user.userId}');
+      // print('UPDATE DATA: ${updatedUser.toJson()}');
+      // print('UPDATE DATA: ${updatedUser.toJson()}');
+
+      if (response.statusCode == 200) {
+        await fetchUsers();
+        clearInputField();
+        Navigator.of(context).pop();
+      } else {
+        showErrorDialog(
+            'ເກີດຂໍ້ຜິດພາດໃນການແກ້ໄຂຜູ້ໃຊ້: ${response.statusCode}\n${response.body}');
+      }
+    } catch (error) {
+      showErrorDialog('ຂໍ້ຜິດພາດ: $error');
     }
-  } catch (error) {
-    showErrorDialog('ຂໍ້ຜິດພາດ: $error');
   }
-}
 
+  // delete
+  Future<void> deleteUser(int userId) async {
+    try {
+      final response = await http.delete(Uri.parse('$_baseUrl/users/$userId'));
+      if (response.statusCode == 200) {
+        // Shoe deleted successfully, refresh the list
+        fetchUsers();
+      } else {
+        showErrorDialog('Failed to delete shoe: ${response.statusCode}');
+      }
+    } catch (error) {
+      showErrorDialog('ກາລຸນາເຊື່ອມຕໍ່ກັບອິນເຕີເນັດ');
+    }
+  }
+
+  
 
   @override
   Widget build(BuildContext context) {
@@ -528,7 +509,8 @@ class _CustomerPageState extends State<CustomerPage> {
                                     SizedBox(width: 4),
                                     Expanded(
                                       child: Text(
-                                         user.role ?? '', // ใช้ค่าสตริงว่างถ้า user.role เป็น null
+                                        user.role ??
+                                            '', // ใช้ค่าสตริงว่างถ้า user.role เป็น null
                                         style: TextStyle(
                                             color: Colors.red,
                                             fontWeight: FontWeight.bold),
@@ -556,7 +538,9 @@ class _CustomerPageState extends State<CustomerPage> {
                               ),
                               // SizedBox(width: 8),
                               IconButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  showDeleteConfirmationDialog(user.userId!);
+                                },
                                 icon: Icon(
                                   Icons.delete,
                                   color: Colors.red,
@@ -581,6 +565,48 @@ class _CustomerPageState extends State<CustomerPage> {
           size: 30,
         ),
         backgroundColor: Colors.green,
+      ),
+    );
+  }
+
+  // Function to show a confirmation dialog before deleting a shoe
+  void showDeleteConfirmationDialog(int userId) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: Colors.teal,
+        title: const Center(child: Text('ຢືນຢັນການລຶບ')),
+        content: Column(
+          mainAxisSize: MainAxisSize.min, // ❗ ทำให้ content ไม่สูงเกินไป
+          children: const [
+            Text(
+              'ທ່ານແນ່ໃຈວ່າຕ້ອງການລຶບເກີບນີ້?',
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+        actions: [
+          ElevatedButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text(
+              'ຍົກເລີກ',
+              style:
+                  TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              deleteUser(userId);
+              Navigator.of(context).pop();
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            child: const Text(
+              'ລຶບ',
+              style:
+                  TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
+            ),
+          ),
+        ],
       ),
     );
   }

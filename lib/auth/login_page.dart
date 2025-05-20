@@ -5,9 +5,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shoes_app/page/admin/admin_home_page.dart';
-import 'package:shoes_app/page/admin/manage_page.dart';
+import 'package:shoes_app/page/customer/bottom_navigator.dart';
 import 'dart:convert';
-import '../page/customer/home_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -68,7 +67,7 @@ class _LoginPageState extends State<LoginPage> {
           } else if (role == 'customer') {
             Navigator.of(context).pop();
             MaterialPageRoute route =
-                MaterialPageRoute(builder: (_) => HomePage());
+                MaterialPageRoute(builder: (_) => BottomNavigator());
             Navigator.push(context, route);
           } else {
             setState(() {

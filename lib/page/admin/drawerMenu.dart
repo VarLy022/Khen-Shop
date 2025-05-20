@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shoes_app/page/admin/admin_home_page.dart';
 import 'package:shoes_app/page/admin/manage_page.dart';
-import 'package:shoes_app/page/customer/home_page.dart';
+import 'package:shoes_app/page/customer/bottom_navigator.dart';
 import 'package:shoes_app/auth/login_page.dart';
 
 class Drawermenu extends StatefulWidget {
@@ -256,7 +256,7 @@ class _DrawermenuState extends State<Drawermenu> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => HomePage(),
+                          builder: (context) => BottomNavigator(),
                         ),
                       );
                     },

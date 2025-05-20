@@ -6,59 +6,8 @@ import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 
-// Data model for a shoe
-class Shoe {
-  int? shoeId;
-  String name;
-  String brand;
-  double price;
-  int stock;
-  String size;
-  String color;
-  String description;
-  String imageUrl;
+import 'shoe_data_model.dart';
 
-  Shoe({
-    this.shoeId,
-    required this.name,
-    required this.brand,
-    required this.price,
-    required this.stock,
-    required this.size,
-    required this.color,
-    required this.description,
-    required this.imageUrl,
-  });
-
-  // Factory method to create a Shoe object from JSON data
-  factory Shoe.fromJson(Map<String, dynamic> json) {
-    return Shoe(
-      shoeId: json['shoe_id'],
-      name: json['name'],
-      brand: json['brand'],
-      price: double.parse(json['price'].toString()), // Ensure price is a double
-      stock: json['stock'],
-      size: json['size'],
-      color: json['color'],
-      description: json['description'],
-      imageUrl: json['image_url'],
-    );
-  }
-
-  // Method to convert a Shoe object to JSON for sending to the server
-  Map<String, dynamic> toJson() {
-    return {
-      'name': name,
-      'brand': brand,
-      'price': price,
-      'stock': stock,
-      'size': size,
-      'color': color,
-      'description': description,
-      'image_url': imageUrl,
-    };
-  }
-}
 
 class ProductsPage extends StatefulWidget {
   const ProductsPage({super.key});
@@ -166,14 +115,15 @@ class _ProductsPageState extends State<ProductsPage> {
   Future<void> _addShoe() async {
     // Basic form validation
     if (_nameController.text.isEmpty ||
-        _brandController.text.isEmpty ||
+        // _brandController.text.isEmpty ||
         _priceController.text.isEmpty ||
         _stockController.text.isEmpty ||
-        _sizeController.text.isEmpty ||
-        _colorController.text.isEmpty ||
-        _descriptionController.text.isEmpty ||
-        _imageUrlController.text.isEmpty) {
-      _showErrorDialog('ກະລຸນາປ້ອນຂໍ້ມູນໃຫ້ຄົບຖ້ວນ.');
+        _sizeController.text.isEmpty 
+        // _colorController.text.isEmpty ||
+        // _descriptionController.text.isEmpty ||
+        // _imageUrlController.text.isEmpty
+      ) {
+      _showErrorDialog('ກະລຸນາຢ່າໃຫ້ ຊື່,ລາຄາ,ຈຳນວນ,ຂະໜາດ ເປັນຄ່າວ່າງ.');
       return;
     }
 
@@ -211,14 +161,15 @@ class _ProductsPageState extends State<ProductsPage> {
   Future<void> _editShoe(Shoe shoe) async {
     // Basic form validation
     if (_nameController.text.isEmpty ||
-        _brandController.text.isEmpty ||
+        // _brandController.text.isEmpty ||
         _priceController.text.isEmpty ||
         _stockController.text.isEmpty ||
-        _sizeController.text.isEmpty ||
-        _colorController.text.isEmpty ||
-        _descriptionController.text.isEmpty ||
-        _imageUrlController.text.isEmpty) {
-      _showErrorDialog('ກະລຸນາປ້ອນຂໍ້ມູນໃຫ້ຄົບຖ້ວນ.');
+        _sizeController.text.isEmpty 
+        // _colorController.text.isEmpty ||
+        // _descriptionController.text.isEmpty ||
+        // _imageUrlController.text.isEmpty
+      ) {
+      _showErrorDialog('ກະລຸນາຢ່າໃຫ້ ຊື່,ລາຄາ,ຈຳນວນ,ຂະໜາດ ເປັນຄ່າວ່າງ.');
       return;
     }
     try {
@@ -524,9 +475,11 @@ class _ProductsPageState extends State<ProductsPage> {
                                 fit: BoxFit.cover,
                                 width: double.infinity,
                                 errorBuilder: (context, error, stackTrace) {
-                                  return const Center(
-                                      child:
-                                          Text('ເກີດຂໍ້ຜິດພາດໃນການໂລດຮູບພາບ'));
+                                  return Center(
+                                    child:
+                                        Image.asset('assets/icons/shoes.png'),
+                                    // child: Icon(Icons.shopping_bag),
+                                  );
                                 },
                               ),
                             ),
@@ -622,74 +575,91 @@ class _ProductsPageState extends State<ProductsPage> {
           true, // Allows the sheet to take up full screen height
       builder: (context) {
         return DraggableScrollableSheet(
-          initialChildSize: 0.5, // Start with 50% of the screen height
-          minChildSize: 0.3, // Minimum 30%
-          maxChildSize: 0.9, // Maximum 90%
+          initialChildSize: 1,
+          minChildSize: 0.5,
+          maxChildSize: 1,
           builder: (BuildContext context, ScrollController scrollController) {
             return Container(
-              padding: const EdgeInsets.all(16),
+              // padding: const EdgeInsets.all(16),
               decoration: const BoxDecoration(
-                color: Colors.white, // Background color of the sheet
+                color: Colors.teal, // Background color of the sheet
                 borderRadius: BorderRadius.vertical(
                     top: Radius.circular(20)), // Rounded top corners
               ),
               child: ListView(
                 controller: scrollController,
                 children: <Widget>[
-                  Image.network(
-                    shoe.imageUrl,
-                    fit: BoxFit.contain,
-                    width: double.infinity,
-                    errorBuilder: (context, error, stackTrace) {
-                      return const Center(child: Text('Failed to load image'));
-                    },
+                  Padding(
+                    // padding: const EdgeInsets.symmetric(vertical: 40.0),
+                    padding: const EdgeInsets.only(top: 40.0),
+                    child: Image.network(
+                      shoe.imageUrl,
+                      fit: BoxFit.contain,
+                      width: double.infinity,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Center(
+                          child: Image.asset('assets/icons/shoes.png'),
+                          // child: Icon(Icons.shopping_bag),
+                        );
+                      },
+                    ),
                   ),
-                  Text(
-                    shoe.name,
-                    style: const TextStyle(
-                        fontSize: 24, fontWeight: FontWeight.bold),
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          shoe.name,
+                          style: const TextStyle(
+                              fontSize: 24, fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'ຍີ່ຫໍ້: ${shoe.brand}',
+                          style: const TextStyle(
+                              fontSize: 18, color: Colors.black),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'ຈຳນວນ: ${shoe.stock}',
+                          style: const TextStyle(fontSize: 18),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'ຂະໜາດ: ${shoe.size}',
+                          style: const TextStyle(fontSize: 18),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'ສີ: ${shoe.color}',
+                          style: const TextStyle(fontSize: 18),
+                        ),
+                        const SizedBox(height: 16),
+                        const Text(
+                          'ລາຍລະອຽດ:',
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          shoe.description,
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'ລາຄາ: ${NumberFormat(
+                            "#,##0.00",
+                          ).format(shoe.price)} LAK',
+                          style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.amber),
+                        ),
+                        const SizedBox(height: 20),
+                      ],
+                    ),
                   ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'ຍີ່ຫໍ້: ${shoe.brand}',
-                    style: const TextStyle(fontSize: 18, color: Colors.grey),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'ລາຄາ: ${NumberFormat(
-                      "#,##0.00",
-                    ).format(shoe.price)} LAK',
-                    style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.green),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'ຈຳນວນ: ${shoe.stock}',
-                    style: const TextStyle(fontSize: 18),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'ຂະໜາດ: ${shoe.size}',
-                    style: const TextStyle(fontSize: 18),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'ສີ: ${shoe.color}',
-                    style: const TextStyle(fontSize: 18),
-                  ),
-                  const SizedBox(height: 16),
-                  const Text(
-                    'ລາຍລະອຽດ:',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    shoe.description,
-                    style: const TextStyle(fontSize: 16),
-                  ),
-                  const SizedBox(height: 16),
                 ],
               ),
             );
