@@ -4,10 +4,10 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
 import 'shoe_data_model.dart';
-
 
 class ProductsPage extends StatefulWidget {
   const ProductsPage({super.key});
@@ -28,6 +28,7 @@ class _ProductsPageState extends State<ProductsPage> {
   bool _isLoading = true;
   String? errorMessage;
   final ScrollController _scrollController = ScrollController();
+  final ImagePicker _picker = ImagePicker();
 
 // search
   bool isSearching = false;
@@ -115,14 +116,14 @@ class _ProductsPageState extends State<ProductsPage> {
   Future<void> _addShoe() async {
     // Basic form validation
     if (_nameController.text.isEmpty ||
-        // _brandController.text.isEmpty ||
-        _priceController.text.isEmpty ||
-        _stockController.text.isEmpty ||
-        _sizeController.text.isEmpty 
+            // _brandController.text.isEmpty ||
+            _priceController.text.isEmpty ||
+            _stockController.text.isEmpty ||
+            _sizeController.text.isEmpty
         // _colorController.text.isEmpty ||
         // _descriptionController.text.isEmpty ||
         // _imageUrlController.text.isEmpty
-      ) {
+        ) {
       _showErrorDialog('ກະລຸນາຢ່າໃຫ້ ຊື່,ລາຄາ,ຈຳນວນ,ຂະໜາດ ເປັນຄ່າວ່າງ.');
       return;
     }
@@ -161,14 +162,14 @@ class _ProductsPageState extends State<ProductsPage> {
   Future<void> _editShoe(Shoe shoe) async {
     // Basic form validation
     if (_nameController.text.isEmpty ||
-        // _brandController.text.isEmpty ||
-        _priceController.text.isEmpty ||
-        _stockController.text.isEmpty ||
-        _sizeController.text.isEmpty 
+            // _brandController.text.isEmpty ||
+            _priceController.text.isEmpty ||
+            _stockController.text.isEmpty ||
+            _sizeController.text.isEmpty
         // _colorController.text.isEmpty ||
         // _descriptionController.text.isEmpty ||
         // _imageUrlController.text.isEmpty
-      ) {
+        ) {
       _showErrorDialog('ກະລຸນາຢ່າໃຫ້ ຊື່,ລາຄາ,ຈຳນວນ,ຂະໜາດ ເປັນຄ່າວ່າງ.');
       return;
     }
@@ -328,9 +329,66 @@ class _ProductsPageState extends State<ProductsPage> {
                   controller: _descriptionController,
                   decoration: const InputDecoration(labelText: 'ລາຍລະອຽດ'),
                 ),
-                TextField(
-                  controller: _imageUrlController,
-                  decoration: const InputDecoration(labelText: 'URL ຮູບພາບ'),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _imageUrlController,
+                        decoration:
+                            const InputDecoration(labelText: 'URL ຮູບພາບ'),
+                      ),
+                    ),
+                    Padding(
+                        padding: const EdgeInsets.only(top: 25.0),
+                        child: IconButton(
+                          icon: Icon(Icons.camera_alt),
+                          onPressed: () {
+                            showModalBottomSheet(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return Wrap(
+                                  children: [
+                                    ListTile(
+                                      leading: Icon(Icons.camera),
+                                      title: Text('ຖ່າຍຮູບ (Camera)'),
+                                      onTap: () async {
+                                        Navigator.pop(
+                                            context); // ปิด bottom sheet
+                                        final XFile? photo =
+                                            await _picker.pickImage(
+                                                source: ImageSource.camera);
+                                        if (photo != null) {
+                                          setState(() {
+                                            _imageUrlController.text =
+                                                photo.path;
+                                          });
+                                        }
+                                      },
+                                    ),
+                                    ListTile(
+                                      leading: Icon(Icons.photo_library),
+                                      title: Text('ເລືອກຮູບ (Gallery)'),
+                                      onTap: () async {
+                                        Navigator.pop(
+                                            context); // ปิด bottom sheet
+                                        final XFile? image =
+                                            await _picker.pickImage(
+                                                source: ImageSource.gallery);
+                                        if (image != null) {
+                                          setState(() {
+                                            _imageUrlController.text =
+                                                image.path;
+                                          });
+                                        }
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                        )),
+                  ],
                 ),
                 const SizedBox(height: 20),
                 Row(
