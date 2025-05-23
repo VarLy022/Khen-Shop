@@ -7,6 +7,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 
 import 'user_data_model.dart';
 
@@ -28,6 +29,7 @@ class _CustomerPageState extends State<CustomerPage> {
 
   List<User> _user = [];
   bool isLoading = true;
+  final ImagePicker _picker = ImagePicker();
 
   @override
   void initState() {
@@ -172,12 +174,62 @@ class _CustomerPageState extends State<CustomerPage> {
                 ),
                 Row(
                   children: [
-                    TextField(
-                      controller: userImageController,
-                      decoration:
-                          const InputDecoration(labelText: 'ຮູບພາບຜູ້ໃຊ້'),
+                    Expanded(
+                      child: TextField(
+                        controller: userImageController,
+                        decoration:
+                            const InputDecoration(labelText: 'URL ຮູບພາບ'),
+                      ),
                     ),
-                    IconButton(onPressed: (){}, icon: Icon(Icons.camera))
+                    Padding(
+                      padding: const EdgeInsets.only(top: 25.0),
+                      child: IconButton(
+                        icon: Icon(Icons.camera_alt),
+                        onPressed: () {
+                          showModalBottomSheet(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return Wrap(
+                                children: [
+                                  ListTile(
+                                    leading: Icon(Icons.camera_alt),
+                                    title: Text('ຖ່າຍຮູບ (Camera)'),
+                                    onTap: () async {
+                                      Navigator.pop(
+                                          context); // ปิด bottom sheet
+                                      final XFile? photo =
+                                          await _picker.pickImage(
+                                              source: ImageSource.camera);
+                                      if (photo != null) {
+                                        setState(() {
+                                          userImageController.text = photo.path;
+                                        });
+                                      }
+                                    },
+                                  ),
+                                  ListTile(
+                                    leading: Icon(Icons.photo_library),
+                                    title: Text('ເລືອກຮູບ (Gallery)'),
+                                    onTap: () async {
+                                      Navigator.pop(
+                                          context); // ปิด bottom sheet
+                                      final XFile? image =
+                                          await _picker.pickImage(
+                                              source: ImageSource.gallery);
+                                      if (image != null) {
+                                        setState(() {
+                                          userImageController.text = image.path;
+                                        });
+                                      }
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    ),
                   ],
                 ),
                 const SizedBox(height: 20),
@@ -262,7 +314,7 @@ class _CustomerPageState extends State<CustomerPage> {
   //show error dialog
   void showErrorDialog(String message) {
     AwesomeDialog(
-      dialogBackgroundColor: Colors.red,
+            dialogBackgroundColor: Colors.red,
             context: context,
             dialogType: DialogType.error,
             animType: AnimType.scale,
@@ -376,14 +428,11 @@ class _CustomerPageState extends State<CustomerPage> {
     }
   }
 
-  
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('ຂໍ້ມູນຜູ້ໃຊ້'),
-        backgroundColor: Colors.amberAccent,
+        title: Center(child: Text('ຂໍ້ມູນຜູ້ໃຊ້')),
       ),
       body: isLoading
           ? Center(child: CircularProgressIndicator())

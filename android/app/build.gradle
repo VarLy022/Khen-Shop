@@ -7,8 +7,9 @@ plugins {
 
 android {
     namespace = "com.example.shoes_app"
-    compileSdk = flutter.compileSdkVersion
-    ndkVersion = "25.1.8937393" // ✅ ใส่ตรงนี้แบบ manual
+    // compileSdk = flutter.compileSdkVersion
+    ndkVersion = "25.1.8937393"
+    compileSdk = 35
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8

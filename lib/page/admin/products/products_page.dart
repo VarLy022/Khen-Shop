@@ -339,55 +339,54 @@ class _ProductsPageState extends State<ProductsPage> {
                       ),
                     ),
                     Padding(
-                        padding: const EdgeInsets.only(top: 25.0),
-                        child: IconButton(
-                          icon: Icon(Icons.camera_alt),
-                          onPressed: () {
-                            showModalBottomSheet(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return Wrap(
-                                  children: [
-                                    ListTile(
-                                      leading: Icon(Icons.camera),
-                                      title: Text('ຖ່າຍຮູບ (Camera)'),
-                                      onTap: () async {
-                                        Navigator.pop(
-                                            context); // ปิด bottom sheet
-                                        final XFile? photo =
-                                            await _picker.pickImage(
-                                                source: ImageSource.camera);
-                                        if (photo != null) {
-                                          setState(() {
-                                            _imageUrlController.text =
-                                                photo.path;
-                                          });
-                                        }
-                                      },
-                                    ),
-                                    ListTile(
-                                      leading: Icon(Icons.photo_library),
-                                      title: Text('ເລືອກຮູບ (Gallery)'),
-                                      onTap: () async {
-                                        Navigator.pop(
-                                            context); // ปิด bottom sheet
-                                        final XFile? image =
-                                            await _picker.pickImage(
-                                                source: ImageSource.gallery);
-                                        if (image != null) {
-                                          setState(() {
-                                            _imageUrlController.text =
-                                                image.path;
-                                          });
-                                        }
-                                      },
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
-                          },
-                        )),
+                      padding: const EdgeInsets.only(top: 25.0),
+                      child: IconButton(
+                        icon: Icon(Icons.camera_alt),
+                        onPressed: () {
+                          showModalBottomSheet(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return Wrap(
+                                children: [
+                                  ListTile(
+                                    leading: Icon(Icons.camera_alt),
+                                    title: Text('ຖ່າຍຮູບ (Camera)'),
+                                    onTap: () async {
+                                      Navigator.pop(
+                                          context); // ปิด bottom sheet
+                                      final XFile? photo =
+                                          await _picker.pickImage(
+                                              source: ImageSource.camera);
+                                      if (photo != null) {
+                                        setState(() {
+                                          _imageUrlController.text = photo.path;
+                                        });
+                                      }
+                                    },
+                                  ),
+                                  ListTile(
+                                    leading: Icon(Icons.photo_library),
+                                    title: Text('ເລືອກຮູບ (Gallery)'),
+                                    onTap: () async {
+                                      Navigator.pop(
+                                          context); // ปิด bottom sheet
+                                      final XFile? image =
+                                          await _picker.pickImage(
+                                              source: ImageSource.gallery);
+                                      if (image != null) {
+                                        setState(() {
+                                          _imageUrlController.text = image.path;
+                                        });
+                                      }
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    ),
                   ],
                 ),
                 const SizedBox(height: 20),

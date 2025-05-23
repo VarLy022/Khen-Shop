@@ -79,7 +79,8 @@ router.post('/login', (req, res) => {
           id: user.user_id,
           name: user.name,
           email: user.email,
-          role: user.role
+          role: user.role,
+          image: user.user_image
         }
       });
     } else {

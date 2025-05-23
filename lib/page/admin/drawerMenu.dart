@@ -1,11 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:shoes_app/page/admin/admin_home_page.dart';
 import 'package:shoes_app/page/admin/manage_page.dart';
 import 'package:shoes_app/page/customer/bottom_navigator.dart';
 import 'package:shoes_app/auth/login_page.dart';
 
 class Drawermenu extends StatefulWidget {
-  const Drawermenu({super.key});
+  final String userName;
+  final String userImage;
+  final String userEmail;
+  final String userRole;
+  const Drawermenu(
+      {required this.userName,
+      required this.userImage,
+      required this.userEmail,
+      required this.userRole,
+      Key? key})
+      : super(key: key);
 
   @override
   State<Drawermenu> createState() => _DrawermenuState();
@@ -29,8 +38,8 @@ class _DrawermenuState extends State<Drawermenu> {
               colors: [Colors.blue, Colors.purple],
               begin: Alignment.topCenter,
             )),
-            accountName: const Text(
-              'KHEN SHOP',
+            accountName: Text(
+              '${widget.userName}',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 25,
@@ -38,12 +47,12 @@ class _DrawermenuState extends State<Drawermenu> {
                 // fontWeight: FontWeight.bold,
               ),
             ),
-            accountEmail: const Text(
-              'varlee@gmail.com',
+            accountEmail: Text(
+              '${widget.userEmail}',
               style: TextStyle(
                   fontFamily: 'NotoSansLao',
                   // color: Colors.green.shade900,
-                  fontSize: 19,
+                  fontSize: 18,
                   color: Colors.black,
                   fontWeight: FontWeight.bold),
             ),
@@ -52,15 +61,13 @@ class _DrawermenuState extends State<Drawermenu> {
               width: 200,
               margin: EdgeInsets.fromLTRB(0, 0, 0, 15),
               child: CircleAvatar(
-                child: ClipOval(
-                  child: Image.asset('assets/images/logo_shoe.jpg'),
-                ),
+                radius: 30,
+                backgroundImage: NetworkImage(widget.userImage),
               ),
             ),
           ),
           Expanded(
             child: ListView(
-              
               children: [
                 Card(
                   elevation: 5,
@@ -81,7 +88,12 @@ class _DrawermenuState extends State<Drawermenu> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => AdminHomePage(),
+                          builder: (context) => BottomNavigator(
+                            userName: widget.userName,
+                            userImage: widget.userImage,
+                            userEmail: widget.userEmail,
+                            userRole: widget.userRole,
+                          ),
                         ),
                       );
                     },
@@ -107,7 +119,12 @@ class _DrawermenuState extends State<Drawermenu> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => ManagePage(),
+                          builder: (context) => ManagePage(
+                            userName: widget.userName,
+                            userImage: widget.userImage,
+                            userEmail: widget.userEmail,
+                            userRole: widget.userRole,
+                          ),
                         ),
                       );
                     },
@@ -233,32 +250,6 @@ class _DrawermenuState extends State<Drawermenu> {
                       //     builder: (context) => ReportPage(),
                       //   ),
                       // );
-                    },
-                  ),
-                ),
-                Divider(),
-                Card(
-                  elevation: 5,
-                  child: ListTile(
-                    leading: Icon(
-                      Icons.people,
-                      color: Colors.teal,
-                      size: 25,
-                    ),
-                    title: Text(
-                      'User interface',
-                      style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.black,
-                          fontFamily: 'NotoSansLao'),
-                    ),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => BottomNavigator(),
-                        ),
-                      );
                     },
                   ),
                 ),

@@ -1,8 +1,20 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:shoes_app/page/admin/drawerMenu.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final String userName;
+  final String userImage;
+  final String userEmail;
+  final String userRole;
+
+  const HomePage({
+    required this.userName,
+    required this.userImage,
+    required this.userEmail,
+    required this.userRole,
+    super.key,
+  });
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -25,40 +37,31 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   backgroundColor: Colors.amber,
-      //   leading: Icon(Icons.menu),
-      //   title: Text(
-      //     "Home",
-      //     style: TextStyle(
-      //       fontSize: 18,
-      //       color: Colors.white,
-      //       fontWeight: FontWeight.bold,
-      //     ),
-      //   ),
-      //   centerTitle: true,
-      //   actions: [
-      //     CircleAvatar(
-      //       radius: 15,
-      //       backgroundColor: Colors.red,
-      //       child: Icon(
-      //         Icons.person,
-      //         color: Colors.white,
-      //       ),
-      //     ),
-      //     Padding(
-      //       padding: const EdgeInsets.all(8.0),
-      //       child: CircleAvatar(
-      //         radius: 15,
-      //         backgroundColor: Colors.green,
-      //         child: Icon(
-      //           Icons.notification_add,
-      //           color: Colors.white,
-      //         ),
-      //       ),
-      //     ),
-      //   ],
-      // ),
+      appBar: AppBar(
+        // backgroundColor: Colors.white54,
+        title: Center(
+          child: Text(
+            'KHEN SHOP🛍🛒',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+        ),
+        actions: [
+          IconButton(
+              onPressed: () {},
+              icon: Icon(
+                Icons.notifications,
+                size: 30,
+              ))
+        ],
+      ),
+      drawer: widget.userRole == 'admin'
+          ? Drawermenu(
+              userName: widget.userName,
+              userImage: widget.userImage,
+              userEmail: widget.userEmail,
+              userRole: widget.userRole,
+            )
+          : null, // ถ้าไม่ใช่ admin ไม่แสดง Drawer
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -66,56 +69,40 @@ class _HomePageState extends State<HomePage> {
             children: [
               Padding(
                 padding: const EdgeInsets.all(12.0),
-                child: Text("Hi, User",style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                ),),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 15),
                 child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Container(
-                      height: 50,
-                      width: 260,
-                      decoration: BoxDecoration(
-                          color: Colors.black,
-                          borderRadius: BorderRadius.circular(10)),
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                          hintText: "Seacrh....",
-                          contentPadding:
-                              EdgeInsets.symmetric(horizontal: 15, vertical: 12),
-                          hintStyle: TextStyle(color: Colors.white),
-                          border: InputBorder.none,
-                          //prefixIcon: Icon(Icons.search),
-                          suffixIcon: Icon(
-                            Icons.search,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
+                    // Avatar
+                    CircleAvatar(
+                      radius: 30,
+                      backgroundImage: NetworkImage(
+                          widget.userImage), // ✅ เปลี่ยนเป็น URL ของผู้ใช้จริง
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Container(
-                        height: 50,
-                        width: 70,
-                        decoration: BoxDecoration(
-                          color: Colors.red,
-                          borderRadius: BorderRadius.circular(10),
+                    SizedBox(width: 12), // ระยะห่างระหว่างรูปกับชื่อ
+                    // ชื่อผู้ใช้
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Hi,",
+                          style: TextStyle(
+                              fontSize: 20,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold),
                         ),
-                        child: Icon(
-                          Icons.apps,
-                          color: Colors.white,
+                        Text(
+                          "${widget.userName}",
+                          style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold),
                         ),
-                      ),
-                    )
+                      ],
+                    ),
                   ],
                 ),
               ),
+              SizedBox(height: 20),
+
               CarouselSlider(
                 options: CarouselOptions(
                   height: 200,
@@ -138,39 +125,21 @@ class _HomePageState extends State<HomePage> {
                   );
                 }).toList(),
               ),
-              Container(
+              SizedBox(
                 height: 50,
                 child: ListView.builder(
-                    shrinkWrap: true,
-                    primary: false,
-                    scrollDirection: Axis.horizontal,
-                    // itemCount: category.length,
-                    itemBuilder: (context, index) {
-                      return GestureDetector(
-                        onTap: () {
-                          onTap(index);
-                        },
-                        // child: Container(
-                        //   height: 50,
-                        //   width: 100,
-                        //   margin: EdgeInsets.all(8),
-                        //   decoration: BoxDecoration(
-                        //     color:
-                        //         currenIndex == index ? Colors.red : Colors.amber,
-                        //     borderRadius: BorderRadius.circular(10),
-                        //   ),
-                        //   child: Center(
-                        //       child: Text(
-                        //     category[index],
-                        //     style: TextStyle(
-                        //       color: Colors.white,
-                        //       fontSize: 16,
-                        //       fontWeight: FontWeight.bold,
-                        //     ),
-                        //   )),
-                        // ),
-                      );
-                    }),
+                  shrinkWrap: true,
+                  primary: false,
+                  scrollDirection: Axis.horizontal,
+                  // itemCount: category.length,
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      onTap: () {
+                        onTap(index);
+                      },
+                    );
+                  },
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(
@@ -180,7 +149,7 @@ class _HomePageState extends State<HomePage> {
                 child: Row(
                   children: [
                     Text(
-                      "Product",
+                      "ສິນຄ້າທີ່ດີທີ່ສຸດ",
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,

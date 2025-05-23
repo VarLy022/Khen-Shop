@@ -38,7 +38,16 @@ List<Widget> routePage = [
 ];
 
 class ManagePage extends StatefulWidget {
-  const ManagePage({super.key});
+  final String userName;
+  final String userImage;
+  final String userEmail;
+  final String userRole;
+  const ManagePage(
+      {required this.userName,
+      required this.userImage,
+      required this.userEmail,
+      required this.userRole,
+      super.key});
 
   @override
   State<ManagePage> createState() => _ManagePageState();
@@ -59,9 +68,14 @@ class _ManagePageState extends State<ManagePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: Drawermenu(),
+      drawer: Drawermenu(
+        userName: widget.userName,
+        userImage: widget.userImage,
+        userEmail: widget.userEmail,
+        userRole: widget.userRole,
+      ),
       appBar: AppBar(
-        title: Text("ຈັດການຂໍ້ມູນ"),
+        title: Center(child: Text("ຈັດການຂໍ້ມູນ")),
       ),
       body: Container(
         decoration: BoxDecoration(
@@ -103,7 +117,7 @@ class _ManagePageState extends State<ManagePage> {
                         items[indx], // Dynamic text from items
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 16,
+                          fontSize: 14,
                           fontWeight: FontWeight.bold,
                           // fontFamily: 'NotosansLao',
                         ),

@@ -4,7 +4,6 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:shoes_app/page/admin/admin_home_page.dart';
 import 'package:shoes_app/page/customer/bottom_navigator.dart';
 import 'dart:convert';
 
@@ -58,16 +57,37 @@ class _LoginPageState extends State<LoginPage> {
         if (response.statusCode == 200) {
           final data = jsonDecode(response.body);
           final role = data['user']['role'];
+          final name = data['user']['name'];
+          final image = data['user']['image'];
+          final email = data['user']['email'];
           // success
-          if (role == 'admin') {
+          if (role == 'admin' || role == 'customer') {
+            //   Navigator.of(context).pop();
+            //   MaterialPageRoute route = MaterialPageRoute(
+            //       builder: (_) => AdminHomePage(
+            //             userName: name,
+            //             userImage: image,
+            //             userEmail: email,
+            //           ));
+            //   Navigator.push(context, route);
+            // } else if (role == 'customer') {
+            //   Navigator.of(context).pop();
+            //   MaterialPageRoute route = MaterialPageRoute(
+            //       builder: (_) => BottomNavigator(
+            //             userName: name,
+            //             userImage: image,
+            //             userEmail: email,
+            //           ));
+            //   Navigator.push(context, route);
+
             Navigator.of(context).pop();
-            MaterialPageRoute route =
-                MaterialPageRoute(builder: (_) => AdminHomePage());
-            Navigator.push(context, route);
-          } else if (role == 'customer') {
-            Navigator.of(context).pop();
-            MaterialPageRoute route =
-                MaterialPageRoute(builder: (_) => BottomNavigator());
+            MaterialPageRoute route = MaterialPageRoute(
+                builder: (_) => BottomNavigator(
+                      userRole: role,
+                      userName: name,
+                      userImage: image,
+                      userEmail: email,
+                    ));
             Navigator.push(context, route);
           } else {
             setState(() {
