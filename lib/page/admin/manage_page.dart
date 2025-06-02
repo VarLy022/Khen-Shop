@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:shoes_app/page/admin/category_page.dart';
-import 'package:shoes_app/page/admin/user/customer_page.dart';
+import 'package:shoes_app/page/admin/customer_page.dart';
 import 'package:shoes_app/page/admin/drawerMenu.dart';
 import 'package:shoes_app/page/admin/exchange_page.dart';
-import 'package:shoes_app/page/admin/products/products_page.dart';
+import 'package:shoes_app/page/admin/products_page.dart';
 import 'package:shoes_app/page/admin/staff_page.dart';
 import 'package:shoes_app/page/admin/supplier_page.dart';
 

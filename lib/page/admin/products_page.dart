@@ -2,12 +2,11 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'dart:io' show Platform;
-import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:shoes_app/config/ip_config.dart';
 
-import 'shoe_data_model.dart';
+import '../../model/shoe_data_model.dart';
 
 class ProductsPage extends StatefulWidget {
   const ProductsPage({super.key});
@@ -18,11 +17,7 @@ class ProductsPage extends StatefulWidget {
 
 class _ProductsPageState extends State<ProductsPage> {
   // Base URL for your API
-  final String _baseUrl = kIsWeb
-      ? 'http://172.20.10.2:3000/shoes' // สำหรับ Web
-      : Platform.isAndroid
-          ? 'http://172.20.10.2:3000/shoes' // สำหรับ Android Emulator
-          : 'http://172.20.10.2:3000/shoes'; // สำหรับ iOS หรือ desktop
+  final String _baseUrl = ApiConfig.baseUrl;
 
   List<Shoe> _shoes = [];
   bool _isLoading = true;
@@ -88,27 +83,36 @@ class _ProductsPageState extends State<ProductsPage> {
   }
 
   // Function to fetch all shoes from the API
+  bool _hasShownError = false; // เพิ่มตัวแปรนี้ไว้ด้านบนของ State
   Future<void> _fetchShoes() async {
     setState(() {
       _isLoading = true;
+      _hasShownError = false; // reset ทุกครั้งเมื่อเริ่มโหลดใหม่
     });
+
     try {
-      final response = await http.get(Uri.parse(_baseUrl));
+      final response = await http.get(Uri.parse('$_baseUrl/shoes'));
+
       if (response.statusCode == 200) {
-        // Parse the JSON response and convert it to a list of Shoe objects
         final List<dynamic> data = json.decode(response.body);
-        _shoes = data.map((json) => Shoe.fromJson(json)).toList();
+        setState(() {
+          _shoes = data.map((json) => Shoe.fromJson(json)).toList();
+          _isLoading = false; // ✅ ปิด loading ถ้าโหลดสำเร็จ
+        });
       } else {
-        // Handle errors, such as server errors or invalid responses
-        _showErrorDialog('Failed to load shoes: ${response.statusCode}');
+        // ✅ ถ้ายังไม่ได้โชว์ error ให้โชว์
+        if (!_hasShownError) {
+          _showErrorDialog('ກາລຸນາເຊື່ອມຕໍ່ອິນເຕີເນັດ');
+          _hasShownError = true;
+        }
+        // ไม่ปิด loading → spinner ค้างไว้
       }
     } catch (error) {
-      // Handle network errors, such as connection refused or timeout
-      _showErrorDialog('Error: $error');
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
+      if (!_hasShownError) {
+        _showErrorDialog('ກາລຸນາເຊື່ອມຕໍ່ອິນເຕີເນັດ');
+        _hasShownError = true;
+      }
+      // ไม่ปิด loading → spinner ค้างไว้
     }
   }
 
@@ -459,7 +463,7 @@ class _ProductsPageState extends State<ProductsPage> {
                 onChanged: (value) {
                   // เรียกฟังก์ชันค้นหา
                   if (searchController.text == "" ||
-                      searchController.text == null) {
+                      searchController.text.isEmpty) {
                     _fetchShoes();
                   } else {
                     searchShoe(searchController.text);

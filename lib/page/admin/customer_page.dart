@@ -1,15 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:email_validator/email_validator.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
+import 'package:shoes_app/config/ip_config.dart';
 
-import 'user_data_model.dart';
+import '../../model/user_data_model.dart';
 
 class CustomerPage extends StatefulWidget {
   const CustomerPage({super.key});
@@ -21,12 +20,8 @@ class CustomerPage extends StatefulWidget {
 class _CustomerPageState extends State<CustomerPage> {
   final _formKey = GlobalKey<FormState>();
   // Base URL for your API
-  final String _baseUrl = kIsWeb
-      ? 'http://172.20.10.2:3000' // สำหรับ Web
-      : Platform.isAndroid
-          ? 'http://172.20.10.2:3000' // สำหรับ Android Emulator
-          : 'http://172.20.10.2:3000'; // สำหรับ iOS หรือ desktop
-
+  final String _baseUrl = ApiConfig.baseUrl;
+  
   List<User> _user = [];
   bool isLoading = true;
   final ImagePicker _picker = ImagePicker();
@@ -37,36 +32,35 @@ class _CustomerPageState extends State<CustomerPage> {
     fetchUsers();
   }
 
+  bool _hasShownError = false; 
   Future<void> fetchUsers() async {
     setState(() {
       isLoading = true;
+      _hasShownError = false;
     });
     try {
       final response = await http.get(Uri.parse('$_baseUrl/users'));
-      // if (response.statusCode == 200) {
-      //   setState(() {
-      //     _user = json.decode(response.body);
-      //     isLoading = false;
-      //   });
-      // } else {
-      //   print('ໂຫຼດຂໍ້ມູນບໍ່ສຳເລັດ');
-      // }
       if (response.statusCode == 200) {
         // Parse the JSON response and convert it to a list of Shoe objects
         final List<dynamic> data = json.decode(response.body);
         _user = data.map((json) => User.fromJson(json)).toList();
+        isLoading = false;
       } else {
         // Handle errors, such as server errors or invalid responses
-        showErrorDialog('Failed to load user: ${response.statusCode}');
+        // showErrorDialog('ກາລຸນາເຊື່ອມຕໍ່ກັບອິນເຕີເນັດ');
+        if (!_hasShownError) {
+          showErrorDialog('ກາລຸນາເຊື່ອມຕໍ່ອິນເຕີເນັດ');
+          _hasShownError = true;
+        }
       }
     } catch (error) {
       // Handle network errors, such as connection refused or timeout
-      showErrorDialog('ຂໍ້ຜິດພາດ: $error');
-    } finally {
-      setState(() {
-        isLoading = false;
-      });
-    }
+      // showErrorDialog('ກາລຸນາເຊື່ອມຕໍ່ກັບອິນເຕີເນັດ');
+      if (!_hasShownError) {
+        showErrorDialog('ກາລຸນາເຊື່ອມຕໍ່ອິນເຕີເນັດ');
+        _hasShownError = true;
+      }
+    } 
   }
 
   // controller

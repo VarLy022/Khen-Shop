@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:shoes_app/page/admin/drawerMenu.dart';
+import 'package:shoes_app/page/customer/shoe_component.dart';
 
 class HomePage extends StatefulWidget {
   final String userName;
@@ -37,12 +38,13 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 218, 212, 187),
       appBar: AppBar(
         // backgroundColor: Colors.white54,
         title: Center(
           child: Text(
             'KHEN SHOP🛍🛒',
-            style: TextStyle(fontWeight: FontWeight.bold),
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
           ),
         ),
         actions: [
@@ -53,6 +55,7 @@ class _HomePageState extends State<HomePage> {
                 size: 30,
               ))
         ],
+        automaticallyImplyLeading: widget.userRole != 'admin' ? false : true,
       ),
       drawer: widget.userRole == 'admin'
           ? Drawermenu(
@@ -62,6 +65,7 @@ class _HomePageState extends State<HomePage> {
               userRole: widget.userRole,
             )
           : null, // ถ้าไม่ใช่ admin ไม่แสดง Drawer
+
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -83,16 +87,16 @@ class _HomePageState extends State<HomePage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Hi,",
+                          "Hi👋🏿,",
                           style: TextStyle(
-                              fontSize: 20,
+                              fontSize: 18,
                               color: Colors.black,
                               fontWeight: FontWeight.bold),
                         ),
                         Text(
                           "${widget.userName}",
                           style: TextStyle(
-                              fontSize: 18,
+                              fontSize: 16,
                               color: Colors.black,
                               fontWeight: FontWeight.bold),
                         ),
@@ -102,7 +106,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               SizedBox(height: 20),
-
+          
               CarouselSlider(
                 options: CarouselOptions(
                   height: 200,
@@ -127,19 +131,19 @@ class _HomePageState extends State<HomePage> {
               ),
               SizedBox(
                 height: 50,
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  primary: false,
-                  scrollDirection: Axis.horizontal,
-                  // itemCount: category.length,
-                  itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onTap: () {
-                        onTap(index);
-                      },
-                    );
-                  },
-                ),
+                // child: ListView.builder(
+                //   shrinkWrap: true,
+                //   primary: false,
+                //   scrollDirection: Axis.horizontal,
+                //   itemCount: category.length,
+                //   itemBuilder: (context, index) {
+                //     return GestureDetector(
+                //       onTap: () {
+                //         onTap(index);
+                //       },
+                //     );
+                //   },
+                // ),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(
@@ -164,7 +168,7 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
               ),
-              // ProductComponent(),
+              ShoeComponent(),
             ],
           ),
         ),

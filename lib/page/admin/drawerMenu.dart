@@ -264,10 +264,9 @@ class _DrawermenuState extends State<Drawermenu> {
                     color: Colors.grey[800],
                     child: ListTile(
                       onTap: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (context) => LoginPage()),
-                        );
+                        Navigator.of(context).pop();
+                        MaterialPageRoute route = MaterialPageRoute(builder: (_)=> LoginPage());
+                        Navigator.push(context, route);
                       },
                       leading: Icon(
                         Icons.logout,

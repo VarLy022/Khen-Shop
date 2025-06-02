@@ -59,19 +59,19 @@ class _BottomNavigatorState extends State<BottomNavigator> {
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.home, size: 30),
-            label: "Home",
+            label: "ໜ້າຫຼັກ",
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.shopping_bag, size: 30),
-            label: "Shopping",
+            label: "ຊື້ສິນຄ້າ",
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.shopping_cart, size: 30),
-            label: "My Cart",
+            label: "ກະຕ່າ",
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person, size: 30),
-            label: "Profile",
+            label: "ໂປຣຟາຍ",
           ),
         ],
       ),
