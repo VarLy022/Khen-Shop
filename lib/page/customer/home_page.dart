@@ -8,12 +8,16 @@ class HomePage extends StatefulWidget {
   final String userImage;
   final String userEmail;
   final String userRole;
+  final String userPassword;
+  final String userPhone;
 
   const HomePage({
     required this.userName,
     required this.userImage,
     required this.userEmail,
     required this.userRole,
+    required this.userPassword,
+    required this.userPhone,
     super.key,
   });
 
@@ -27,6 +31,7 @@ class _HomePageState extends State<HomePage> {
     "assets/images/banner2.jpg",
     "assets/images/banner3.jpg",
     "assets/images/banner4.jpg",
+    "assets/images/banner5.jpg",
   ];
   int currenIndex = 0;
   onTap(_index) {
@@ -38,22 +43,27 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 218, 212, 187),
+      // backgroundColor: const Color.fromARGB(255, 218, 212, 187),
       appBar: AppBar(
         // backgroundColor: Colors.white54,
-        title: Center(
+        title: const Center(
           child: Text(
-            'KHEN SHOP🛍🛒',
+            'KHEN NIKE SHOP 👟',
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
           ),
         ),
         actions: [
-          IconButton(
-              onPressed: () {},
-              icon: Icon(
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: CircleAvatar(
+              radius: 17,
+              backgroundColor: Colors.white,
+              child: Icon(
                 Icons.notifications,
-                size: 30,
-              ))
+                size: 27,
+              ),
+            ),
+          ),
         ],
         automaticallyImplyLeading: widget.userRole != 'admin' ? false : true,
       ),
@@ -63,50 +73,59 @@ class _HomePageState extends State<HomePage> {
               userImage: widget.userImage,
               userEmail: widget.userEmail,
               userRole: widget.userRole,
+              userPassword: widget.userPassword,
+              userPhone: widget.userPhone,
             )
           : null, // ถ้าไม่ใช่ admin ไม่แสดง Drawer
 
-      body: SafeArea(
-        child: SingleChildScrollView(
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Row(
-                  children: [
-                    // Avatar
-                    CircleAvatar(
+              Row(
+                children: [
+                  // Avatar
+                  Padding(
+                    padding: const EdgeInsets.only(left: 12),
+                    child: CircleAvatar(
                       radius: 30,
-                      backgroundImage: NetworkImage(
-                          widget.userImage), // ✅ เปลี่ยนเป็น URL ของผู้ใช้จริง
+                      backgroundImage: (widget.userImage.isNotEmpty &&
+                              widget.userImage.isNotEmpty)
+                          ? NetworkImage(widget.userImage)
+                          : null,
+                      child:
+                          (widget.userImage.isEmpty)
+                              ? Icon(Icons.person, size: 45)
+                              : null,
                     ),
-                    SizedBox(width: 12), // ระยะห่างระหว่างรูปกับชื่อ
-                    // ชื่อผู้ใช้
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Hi👋🏿,",
-                          style: TextStyle(
-                              fontSize: 18,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          "${widget.userName}",
-                          style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+                  ),
+
+                  SizedBox(width: 12), // ระยะห่างระหว่างรูปกับชื่อ
+                  // ชื่อผู้ใช้
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Hi👋🏿,",
+                        style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        "${widget.userName}",
+                        style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                ],
               ),
               SizedBox(height: 20),
-          
               CarouselSlider(
                 options: CarouselOptions(
                   height: 200,

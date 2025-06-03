@@ -9,11 +9,15 @@ class BottomNavigator extends StatefulWidget {
   final String userImage;
   final String userEmail;
   final String userRole;
+  final String userPassword;
+  final String userPhone;
   const BottomNavigator({
     required this.userName,
     required this.userImage,
     required this.userEmail,
     required this.userRole,
+    required this.userPassword,
+    required this.userPhone,
     super.key,
   });
 
@@ -30,14 +34,30 @@ class _BottomNavigatorState extends State<BottomNavigator> {
     super.initState();
     children = [
       HomePage(
-          userName: widget.userName,
-          userImage: widget.userImage,
-          userEmail: widget.userEmail,
-          userRole: widget.userRole,
+        userName: widget.userName,
+        userImage: widget.userImage,
+        userEmail: widget.userEmail,
+        userRole: widget.userRole,
+        userPassword: widget.userPassword,
+        userPhone: widget.userPhone,
       ),
-      ShopPage(),
+      ShopPage(
+        userName: widget.userName,
+        userImage: widget.userImage,
+        userEmail: widget.userEmail,
+        userRole: widget.userRole,
+        userPassword: widget.userPassword,
+        userPhone: widget.userPhone,
+      ),
       MyCartPage(),
-      ProfilePage(),
+      ProfilePage(
+        userName: widget.userName,
+        userImage: widget.userImage,
+        userEmail: widget.userEmail,
+        userRole: widget.userRole,
+        userPassword: widget.userPassword,
+        userPhone: widget.userPhone,
+      ),
     ];
   }
 
@@ -58,19 +78,35 @@ class _BottomNavigatorState extends State<BottomNavigator> {
         onTap: onTap,
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home, size: 30),
+            icon: Icon(
+              Icons.home,
+              size: 30,
+              color: Colors.black87,
+            ),
             label: "ໜ້າຫຼັກ",
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_bag, size: 30),
+            icon: Icon(
+              Icons.shopping_bag,
+              size: 30,
+              color: Colors.black87,
+            ),
             label: "ຊື້ສິນຄ້າ",
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_cart, size: 30),
+            icon: Icon(
+              Icons.shopping_cart,
+              size: 30,
+              color: Colors.black87,
+            ),
             label: "ກະຕ່າ",
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person, size: 30),
+            icon: Icon(
+              Icons.person,
+              size: 30,
+              color: Colors.black87,
+            ),
             label: "ໂປຣຟາຍ",
           ),
         ],

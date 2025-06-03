@@ -144,7 +144,7 @@ class _ProductsPageState extends State<ProductsPage> {
         imageUrl: _imageUrlController.text,
       );
       final response = await http.post(
-        Uri.parse(_baseUrl),
+        Uri.parse('$_baseUrl/shoes'),
         headers: {"Content-Type": "application/json"},
         body: json.encode(shoe.toJson()),
       );
@@ -190,7 +190,7 @@ class _ProductsPageState extends State<ProductsPage> {
         imageUrl: _imageUrlController.text,
       );
       final response = await http.put(
-        Uri.parse('$_baseUrl/${shoe.shoeId}'),
+        Uri.parse('$_baseUrl/shoes/${shoe.shoeId}'),
         headers: {"Content-Type": "application/json"},
         body: json.encode(updatedShoe.toJson()),
       );
@@ -212,7 +212,7 @@ class _ProductsPageState extends State<ProductsPage> {
   // Function to delete a shoe
   Future<void> _deleteShoe(int shoeId) async {
     try {
-      final response = await http.delete(Uri.parse('$_baseUrl/$shoeId'));
+      final response = await http.delete(Uri.parse('$_baseUrl/shoes/$shoeId'));
       if (response.statusCode == 200) {
         // Shoe deleted successfully, refresh the list
         _fetchShoes();

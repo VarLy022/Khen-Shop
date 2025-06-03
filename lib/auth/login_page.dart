@@ -51,8 +51,10 @@ class _LoginPageState extends State<LoginPage> {
           final data = jsonDecode(response.body);
           final role = data['user']['role'];
           final name = data['user']['name'];
-          final image = data['user']['image'];
+          final image = data['user']['image'] ?? ""; // ใช้ "" ถ้า image เป็น null
           final email = data['user']['email'];
+          final password = data['user']['password'];
+          final phone = data['user']['phone'];
           // success
           if (role == 'admin' || role == 'customer') {
             //   Navigator.of(context).pop();
@@ -80,6 +82,8 @@ class _LoginPageState extends State<LoginPage> {
                       userName: name,
                       userImage: image,
                       userEmail: email,
+                      userPassword: password,
+                      userPhone: phone,
                     ));
             Navigator.push(context, route);
           } else {

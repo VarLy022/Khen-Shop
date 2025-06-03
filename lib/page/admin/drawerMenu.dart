@@ -8,11 +8,15 @@ class Drawermenu extends StatefulWidget {
   final String userImage;
   final String userEmail;
   final String userRole;
+  final String userPassword;
+  final String userPhone;
   const Drawermenu(
       {required this.userName,
       required this.userImage,
       required this.userEmail,
       required this.userRole,
+      required this.userPassword,
+    required this.userPhone,
       Key? key})
       : super(key: key);
 
@@ -93,6 +97,8 @@ class _DrawermenuState extends State<Drawermenu> {
                             userImage: widget.userImage,
                             userEmail: widget.userEmail,
                             userRole: widget.userRole,
+                            userPassword: widget.userPassword,
+                            userPhone: widget.userPhone,
                           ),
                         ),
                       );
@@ -124,6 +130,8 @@ class _DrawermenuState extends State<Drawermenu> {
                             userImage: widget.userImage,
                             userEmail: widget.userEmail,
                             userRole: widget.userRole,
+                            userPassword: widget.userPassword,
+                            userPhone: widget.userPhone,
                           ),
                         ),
                       );

@@ -41,12 +41,10 @@ class _CustomerPageState extends State<CustomerPage> {
     try {
       final response = await http.get(Uri.parse('$_baseUrl/users'));
       if (response.statusCode == 200) {
-        // Parse the JSON response and convert it to a list of Shoe objects
         final List<dynamic> data = json.decode(response.body);
         _user = data.map((json) => User.fromJson(json)).toList();
         isLoading = false;
       } else {
-        // Handle errors, such as server errors or invalid responses
         // showErrorDialog('ກາລຸນາເຊື່ອມຕໍ່ກັບອິນເຕີເນັດ');
         if (!_hasShownError) {
           showErrorDialog('ກາລຸນາເຊື່ອມຕໍ່ອິນເຕີເນັດ');
@@ -54,7 +52,6 @@ class _CustomerPageState extends State<CustomerPage> {
         }
       }
     } catch (error) {
-      // Handle network errors, such as connection refused or timeout
       // showErrorDialog('ກາລຸນາເຊື່ອມຕໍ່ກັບອິນເຕີເນັດ');
       if (!_hasShownError) {
         showErrorDialog('ກາລຸນາເຊື່ອມຕໍ່ອິນເຕີເນັດ');

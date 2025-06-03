@@ -42,11 +42,15 @@ class ManagePage extends StatefulWidget {
   final String userImage;
   final String userEmail;
   final String userRole;
+  final String userPassword;
+  final String userPhone;
   const ManagePage(
       {required this.userName,
       required this.userImage,
       required this.userEmail,
       required this.userRole,
+      required this.userPassword,
+    required this.userPhone,
       super.key});
 
   @override
@@ -73,6 +77,8 @@ class _ManagePageState extends State<ManagePage> {
         userImage: widget.userImage,
         userEmail: widget.userEmail,
         userRole: widget.userRole,
+        userPassword: widget.userPassword,
+        userPhone: widget.userPhone,
       ),
       appBar: AppBar(
         title: Center(child: Text("ຈັດການຂໍ້ມູນ")),
